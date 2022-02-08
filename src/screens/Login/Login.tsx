@@ -33,6 +33,7 @@ const Login = () => {
   const [username, setUsername] = useState<string>('');
 
   const onLogin = () => {
+    // TODO: Add splash screen
     if (username) {
       auth()
         .signInAnonymously()
@@ -94,9 +95,10 @@ const styles = StyleSheet.create({
     height: 200,
   },
   description: {
-    fontFamily: fonts.indie,
-    fontSize: 18,
+    fontFamily: theme.font.family,
+    fontSize: theme.font.sizes.small,
     color: colors.black,
+    textAlign: 'center',
   },
   input: {
     marginTop: 10,
