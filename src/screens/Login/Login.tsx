@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
   },
   input: {
     marginTop: 10,
-    fontFamily: fonts.indie,
     textAlign: 'center',
   },
 });

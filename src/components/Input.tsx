@@ -4,9 +4,7 @@ import {TextInput, StyleSheet, TextInputProps} from 'react-native';
 import theme from '../constants/theme';
 import colors from '../constants/colors';
 
-type InputProps = {} & TextInputProps;
-
-const Input = (props: InputProps) => {
+const Input = (props: TextInputProps) => {
   return <TextInput {...props} style={[styles.input, props.style]} />;
 };
 
