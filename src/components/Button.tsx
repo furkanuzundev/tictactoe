@@ -5,14 +5,16 @@ import theme from '../constants/theme';
 
 interface ButtonProps {
   title: string;
+  buttonStyle?: object;
+  textStyle?: object;
   onPress: () => void;
 }
 
 const Button = (props: ButtonProps) => {
-  const {title, onPress} = props;
+  const {title, onPress, buttonStyle, textStyle} = props;
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Text style={styles.text}>{title}</Text>
+    <TouchableOpacity style={[styles.button, buttonStyle]} onPress={onPress}>
+      <Text style={[styles.text, textStyle]}>{title}</Text>
     </TouchableOpacity>
   );
 };
