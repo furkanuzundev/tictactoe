@@ -16,15 +16,35 @@ import theme from '../../constants/theme';
 import fonts from '../../constants/fonts';
 
 import auth from '@react-native-firebase/auth';
+import {useDispatch} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {setUser} from '../../store/user/actions';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
-  const [userName, setUsername] = useState<string>('');
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  const [username, setUsername] = useState<string>('');
 
   const onLogin = () => {
-    auth()
-      .signInAnonymously()
-      .then(response => console.log('user signed anonymously : ', response))
-      .catch(err => console.log('err : ', err));
+    if (username) {
+      auth()
+        .signInAnonymously()
+        .then(async response => {
+          const user = {
+            id: response.user.uid,
+            username,
+          };
+
+          //TODO: get user from auth
+
+          await AsyncStorage.setItem('@user', JSON.stringify(user));
+          dispatch(setUser(user));
+        })
+        .catch(err => console.log('err : ', err));
+    }
   };
 
   return (
@@ -39,7 +59,7 @@ const Login = () => {
             style={styles.input}
             placeholder="Name"
             onChangeText={name => setUsername(name)}
-            value={userName}
+            value={username}
             selectionColor={colors.primary}
           />
         </View>
