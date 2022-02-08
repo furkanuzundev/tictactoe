@@ -5,7 +5,13 @@ import theme from '../constants/theme';
 import colors from '../constants/colors';
 
 const Input = (props: TextInputProps) => {
-  return <TextInput {...props} style={[styles.input, props.style]} />;
+  return (
+    <TextInput
+      {...props}
+      style={[styles.input, props.style]}
+      selectionColor={colors.primary}
+    />
+  );
 };
 
 export default Input;

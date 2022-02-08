@@ -30,7 +30,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const [username, setUsername] = useState<string>('Furkan');
+  const [username, setUsername] = useState<string>('');
 
   const onLogin = () => {
     if (username) {
@@ -52,7 +52,7 @@ const Login = () => {
             }),
           );
         })
-        .catch(err => console.log('err : ', err));
+        .catch(err => console.error('err : ', err));
     }
   };
 
@@ -69,7 +69,6 @@ const Login = () => {
             placeholder="Name"
             onChangeText={name => setUsername(name)}
             value={username}
-            selectionColor={colors.primary}
           />
         </View>
         <Button title="GO!" onPress={onLogin} />
