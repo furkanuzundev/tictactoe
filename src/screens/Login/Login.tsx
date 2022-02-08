@@ -21,12 +21,13 @@ import {useNavigation} from '@react-navigation/native';
 import {setUser} from '../../store/user/actions';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CommonActions} from '@react-navigation/native';
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const [username, setUsername] = useState<string>('');
+  const [username, setUsername] = useState<string>('Furkan');
 
   const onLogin = () => {
     if (username) {
@@ -38,10 +39,17 @@ const Login = () => {
             username,
           };
 
-          //TODO: get user from auth
+          //TODO: get user from firebase auth
 
           await AsyncStorage.setItem('@user', JSON.stringify(user));
           dispatch(setUser(user));
+
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'Main'}],
+            }),
+          );
         })
         .catch(err => console.log('err : ', err));
     }
