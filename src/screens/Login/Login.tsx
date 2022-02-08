@@ -24,6 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions} from '@react-navigation/native';
 
 import Input from '../../components/Input';
+import Button from '../../components/Button';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -40,8 +41,6 @@ const Login = () => {
             uid: response.user.uid,
             username,
           };
-
-          //TODO: get user from firebase auth
 
           await AsyncStorage.setItem('@user', JSON.stringify(user));
           dispatch(setUser(user));
@@ -73,9 +72,7 @@ const Login = () => {
             selectionColor={colors.primary}
           />
         </View>
-        <TouchableOpacity style={styles.button} onPress={onLogin}>
-          <Text style={styles.buttonText}>GO!</Text>
-        </TouchableOpacity>
+        <Button title="GO!" onPress={onLogin} />
       </View>
     </KeyboardAwareScrollView>
   );
@@ -101,20 +98,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.indie,
     fontSize: 18,
     color: colors.black,
-  },
-  button: {
-    width: 100,
-    padding: 10,
-    backgroundColor: colors.primary,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...theme.shadow,
-  },
-  buttonText: {
-    fontFamily: fonts.indie,
-    fontSize: 25,
-    color: colors.yellow,
   },
   input: {
     marginTop: 10,
