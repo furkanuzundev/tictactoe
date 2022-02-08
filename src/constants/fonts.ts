@@ -1,3 +1,5 @@
+import {Platform} from 'react-native';
+
 export default {
-  indie: 'IndieFlower',
+  indie: Platform.OS === 'ios' ? 'IndieFlower' : 'IndieFlower-Regular',
 };

@@ -35,7 +35,7 @@ const Login = () => {
         .signInAnonymously()
         .then(async response => {
           const user = {
-            id: response.user.uid,
+            uid: response.user.uid,
             username,
           };
 

@@ -6,10 +6,13 @@ import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import {useEffect} from 'react';
 import {useState} from 'react';
+import {useSelector} from 'react-redux';
 
 interface GameListProps {}
 
 const GameList = () => {
+  const {currentUser} = useSelector(store => store.user);
+
   const navigation = useNavigation();
   const [gameList, setGameList] = useState();
 
@@ -23,8 +26,23 @@ const GameList = () => {
 
   const _renderItem = ({item}) => {
     const data = item.data();
+
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('Game', {item})}>
+      <TouchableOpacity
+        onPress={() => {
+          item.ref
+            .update({
+              ...data,
+              between: [
+                ...data.between,
+                {
+                  ...currentUser,
+                  mark: 'O',
+                },
+              ],
+            })
+            .then(() => navigation.navigate('Game', {item}));
+        }}>
         <Text>{data.gameName}</Text>
       </TouchableOpacity>
     );
