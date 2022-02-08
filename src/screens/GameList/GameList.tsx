@@ -1,4 +1,97 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
+import {Text, View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {getGameList} from '../../store/game/operations';
+import Indicator from '../../components/Indicator';
+import colors from '../../constants/colors';
+import theme from '../../constants/theme';
+import {useNavigation} from '@react-navigation/native';
+
+interface GameListProps {}
+
+const GameList = (props: GameListProps) => {
+  const {game, user} = useSelector(store => store);
+
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    dispatch(getGameList());
+  }, [dispatch]);
+
+  const _renderGames = ({item}: any) => {
+    const data = item.data();
+    return (
+      <TouchableOpacity onPress={() => joinGame(item)}>
+        <View style={styles.card}>
+          <Text style={styles.title}>{data.gameName}</Text>
+          <Text style={styles.grid}>{data.dimension}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const _keyExtractor = (item, index) => index.toString();
+
+  const joinGame = (item: any) => {
+    let selectedGame = {...item.data()};
+
+    const joinedUser = {...user.currentUser, mark: 'O'};
+    selectedGame.between = [...selectedGame.between, joinedUser];
+
+    item.ref.update(selectedGame);
+    navigation.navigate('Game', {item});
+  };
+
+  if (!game.games) {
+    return <Indicator loading={true} />;
+  }
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text>Games</Text>
+      </View>
+      <FlatList
+        data={game.games}
+        renderItem={_renderGames}
+        keyExtractor={_keyExtractor}
+        contentContainerStyle={styles.flatlist}
+      />
+    </View>
+  );
+};
+
+export default GameList;
+
+const styles = StyleSheet.create({
+  header: {
+    padding: 10,
+    backgroundColor: colors.background,
+  },
+  container: {
+    flex: 1,
+  },
+  flatlist: {
+    padding: 10,
+  },
+  card: {
+    backgroundColor: colors.white,
+    padding: 10,
+    borderRadius: 10,
+    ...theme.shadow,
+  },
+  title: {
+    fontFamily: theme.font.family,
+    fontSize: theme.font.sizes.medium,
+  },
+  grid: {
+    fontFamily: theme.font.family,
+    fontSize: theme.font.sizes.small,
+  },
+});
+
+/* import * as React from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
 import colors from '../../constants/colors';
 import {useNavigation} from '@react-navigation/native';
@@ -68,4 +161,4 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-});
+}); */
