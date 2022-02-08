@@ -1,5 +1,4 @@
-import React from 'react';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   View,
@@ -9,15 +8,24 @@ import {
   TextInput,
 } from 'react-native';
 
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
 import colors from '../../constants/colors';
 import images from '../../constants/images';
 import theme from '../../constants/theme';
 import fonts from '../../constants/fonts';
 
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import auth from '@react-native-firebase/auth';
 
 const Login = () => {
   const [userName, setUsername] = useState<string>('');
+
+  const onLogin = () => {
+    auth()
+      .signInAnonymously()
+      .then(response => console.log('user signed anonymously : ', response))
+      .catch(err => console.log('err : ', err));
+  };
 
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.keyboard}>
@@ -35,7 +43,7 @@ const Login = () => {
             selectionColor={colors.primary}
           />
         </View>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={onLogin}>
           <Text style={styles.buttonText}>GO!</Text>
         </TouchableOpacity>
       </View>
