@@ -23,6 +23,8 @@ import {setUser} from '../../store/user/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions} from '@react-navigation/native';
 
+import Input from '../../components/Input';
+
 const Login = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -63,7 +65,7 @@ const Login = () => {
           <Text style={styles.description}>
             Enter your name, let the fun begin!
           </Text>
-          <TextInput
+          <Input
             style={styles.input}
             placeholder="Name"
             onChangeText={name => setUsername(name)}
@@ -115,16 +117,8 @@ const styles = StyleSheet.create({
     color: colors.yellow,
   },
   input: {
-    backgroundColor: colors.white,
     marginTop: 10,
-    borderRadius: 10,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
     fontFamily: fonts.indie,
     textAlign: 'center',
-    fontSize: 25,
-    color: colors.black,
-    ...theme.shadow,
   },
 });
