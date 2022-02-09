@@ -1,17 +1,29 @@
 import React from 'react';
+import {useEffect} from 'react';
+import {useState} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import colors from '../../constants/colors';
 import {SCREEN_WIDTH} from '../../constants/screen';
 import theme from '../../constants/theme';
+import {RootState} from '../../store';
 
 import {checkWinner} from '../../utils/winnerHandler';
 
 interface BoardProps {}
 
 const Board = (props: BoardProps) => {
-  const {game, user} = useSelector(store => store);
+  const {game, user} = useSelector((store: RootState) => store);
+  const [allowTouch, setAllowTouch] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (game.currentGame.data().status === 0) {
+      setAllowTouch(false);
+    } else {
+      setAllowTouch(true);
+    }
+  }, [game.currentGame]);
 
   let turn = game.currentGame.data().turn.uid === user.currentUser.uid;
 
@@ -78,10 +90,7 @@ const Board = (props: BoardProps) => {
   };
 
   return (
-    <View
-      style={styles.container}
-      //pointerEvents={turn ? 'auto' : 'none'}
-    >
+    <View style={styles.container} pointerEvents={allowTouch ? 'auto' : 'none'}>
       {renderColumns()}
     </View>
   );
@@ -105,5 +114,6 @@ const styles = StyleSheet.create({
   },
   rowItem: {
     fontFamily: theme.font.family,
+    color: colors.white,
   },
 });
