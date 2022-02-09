@@ -17,36 +17,39 @@ const Board = (props: BoardProps) => {
   const {game, user} = useSelector((store: RootState) => store);
   const [allowTouch, setAllowTouch] = useState<boolean>(true);
 
+  let myTurn = game.currentGame.data().turn.uid === user.currentUser.uid;
+
   useEffect(() => {
-    if (game.currentGame.data().status === 0) {
+    const currentGame = game.currentGame.data();
+
+    if (currentGame.status === 0 || !myTurn || currentGame.between.length < 2) {
       setAllowTouch(false);
     } else {
       setAllowTouch(true);
     }
-  }, [game.currentGame]);
+  }, [game.currentGame, myTurn]);
 
-  let turn = game.currentGame.data().turn.uid === user.currentUser.uid;
-
-  const renderColumns = () => {
+  const renderBoard = () => {
     const board = game.currentGame.data().board;
     const length = Object.keys(board).length;
 
-    return Object.values(board).map((columnItem, columnIndex) => {
+    return Object.values(board).map((rowItem, rowIndex) => {
       return (
-        <View style={styles.row} key={columnIndex}>
-          {renderRows(columnItem, columnIndex, length)}
+        <View style={styles.row} key={rowIndex}>
+          {renderColumns(rowItem, rowIndex, length)}
+          <View style={styles.line} />
         </View>
       );
     });
   };
 
-  const renderRows = (columnItem: any, columnIndex: number, length: number) => {
+  const renderColumns = (rowItem: any, rowIndex: number, length: number) => {
     const boxDimension = SCREEN_WIDTH / length;
-    return columnItem.map((rowItem: any, rowIndex: number) => {
+    return rowItem.map((columnItem: any, columnIndex: number) => {
       return (
         <TouchableOpacity
-          onPress={() => move(columnIndex, rowIndex)}
-          key={rowIndex}>
+          onPress={() => move(rowIndex, columnIndex)}
+          key={columnIndex}>
           <View
             style={[
               {
@@ -56,7 +59,7 @@ const Board = (props: BoardProps) => {
               styles.box,
             ]}>
             <Text style={[styles.rowItem, {fontSize: boxDimension / 2}]}>
-              {rowItem || ''}
+              {columnItem || ''}
             </Text>
           </View>
         </TouchableOpacity>
@@ -64,34 +67,39 @@ const Board = (props: BoardProps) => {
     });
   };
 
-  const move = (columnIndex: number, rowIndex: number) => {
+  const move = (rowIndex: number, columnIndex: number) => {
     const updatedGame = {...game.currentGame.data()};
 
     const me = updatedGame.between.find(
       (item: any) => item.uid === user.currentUser.uid,
     );
 
-    updatedGame.board[columnIndex][rowIndex] = me.mark;
-
-    checkWinner(updatedGame.board, {x: columnIndex, y: rowIndex}, me.mark);
-
     const away = updatedGame.between.find(
       (item: any) => item.uid !== user.currentUser.uid,
     );
 
-    /*  if (turn) {
-      turn = false;
+    updatedGame.board[rowIndex][columnIndex] = me.mark;
+
+    let winner = checkWinner(
+      updatedGame.board,
+      {x: rowIndex, y: columnIndex},
+      me.mark,
+    );
+
+    console.log('winner : ', winner);
+
+    if (myTurn) {
       updatedGame.turn = away;
     } else {
       updatedGame.turn = me;
-    } */
+    }
 
     game.currentGame.ref.update(updatedGame);
   };
 
   return (
     <View style={styles.container} pointerEvents={allowTouch ? 'auto' : 'none'}>
-      {renderColumns()}
+      {renderBoard()}
     </View>
   );
 };
@@ -115,5 +123,8 @@ const styles = StyleSheet.create({
   rowItem: {
     fontFamily: theme.font.family,
     color: colors.white,
+  },
+  line: {
+    position: 'absolute',
   },
 });
