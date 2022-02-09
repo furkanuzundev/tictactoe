@@ -19,14 +19,18 @@ import firestore from '@react-native-firebase/firestore';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import Input from '../../components/Input';
+import Header from './Header';
+import Button from '../../components/Button';
 
 import SelectBoard from './SelectBoard';
+import PickColor from './PickColor';
+import {RootState} from '../../store';
 
 interface componentNameProps {}
 
 const CreateGame = () => {
   const navigation = useNavigation();
-  const {currentUser} = useSelector(store => store.user);
+  const {currentUser} = useSelector((store: RootState) => store.user);
 
   const [gameName, setGameName] = useState<string>('');
   const [boardBackgroundColor, setBoardbackgroundColor] =
@@ -36,7 +40,10 @@ const CreateGame = () => {
   const [selectBoardModal, setSelectBoardModal] = useState<boolean>(false);
 
   const onCreate = () => {
-    //TODO: handle empty game name
+    if (!gameName) {
+      return;
+    }
+
     const data = {
       backgroundColor: boardBackgroundColor,
       between: [
@@ -50,6 +57,14 @@ const CreateGame = () => {
       createdAt: new Date(),
       gameName,
       turn: {...currentUser},
+      /**
+       * status shows what state game is
+       *
+       *  0: Waiting for rival
+       *  1: Playing
+       *  2: Game is done!
+       */
+      status: 0,
     };
 
     firestore()
@@ -60,14 +75,17 @@ const CreateGame = () => {
       });
   };
 
+  const back = () => navigation.goBack();
+
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.keyboard}>
+      <Header onBackPress={back} />
       <View style={styles.container}>
         <View>
           <View style={styles.card}>
             <Input
               style={styles.input}
-              placeholder="Game Name"
+              placeholder="Name your game!"
               onChangeText={value => setGameName(value)}
               value={gameName}
             />
@@ -86,33 +104,13 @@ const CreateGame = () => {
               editable={false}
               placeholderTextColor={colors.white}
             />
-            <ScrollView
-              horizontal
-              style={styles.scrollView}
-              contentContainerStyle={styles.scrollViewContenContainer}
-              showsHorizontalScrollIndicator={false}>
-              {board.colorpalette.map((color, index) => {
-                const selected = color === boardBackgroundColor;
-                return (
-                  <TouchableOpacity
-                    onPress={() => setBoardbackgroundColor(color)}
-                    key={index}>
-                    <View
-                      style={[
-                        {backgroundColor: color},
-                        selected && {transform: [{scale: 1.5}]},
-                        styles.circle,
-                      ]}
-                    />
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
+            <PickColor
+              boardBackgroundColor={boardBackgroundColor}
+              setBoardbackgroundColor={setBoardbackgroundColor}
+            />
           </View>
         </View>
-        <TouchableOpacity style={styles.button} onPress={onCreate}>
-          <Text style={styles.buttonText}>CREATE GAME</Text>
-        </TouchableOpacity>
+        <Button title="CREATE!" onPress={onCreate} />
       </View>
       <SelectBoard
         isOpen={selectBoardModal}
@@ -162,11 +160,7 @@ const styles = StyleSheet.create({
   input: {
     textAlign: 'center',
   },
-  scrollView: {
-    marginTop: 20,
-    flexGrow: 0,
-    height: 80,
-  },
+
   selectBoard: {
     ...theme.shadow,
     color: colors.black,
@@ -181,18 +175,7 @@ const styles = StyleSheet.create({
     fontFamily: theme.font.family,
     fontSize: theme.font.sizes.medium,
   },
-  scrollViewContenContainer: {
-    alignItems: 'center',
-  },
-  circle: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    ...theme.shadow,
-    borderWidth: 0.5,
-    borderColor: colors.white,
-    marginLeft: 15,
-  },
+
   middle: {
     paddingHorizontal: 10,
   },

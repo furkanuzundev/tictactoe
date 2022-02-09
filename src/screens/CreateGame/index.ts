@@ -1,1 +1,1 @@
-export { default } from './CreateGame';
+export {default} from './CreateGame';
