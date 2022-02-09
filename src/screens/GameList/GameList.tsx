@@ -8,11 +8,12 @@ import colors from '../../constants/colors';
 import theme from '../../constants/theme';
 import {useNavigation} from '@react-navigation/native';
 import Header from './Header';
+import {RootState} from '../../store';
 
 interface GameListProps {}
 
 const GameList = (props: GameListProps) => {
-  const {game, user} = useSelector(store => store);
+  const {game, user} = useSelector((store: RootState) => store);
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -33,7 +34,7 @@ const GameList = (props: GameListProps) => {
     );
   };
 
-  const _keyExtractor = (item, index) => index.toString();
+  const _keyExtractor = (_: any, index: number) => index.toString();
 
   const joinGame = (item: any) => {
     let selectedGame = {...item.data()};

@@ -11,3 +11,5 @@ const reducers = combineReducers({
 });
 
 export default createStore(reducers, applyMiddleware(thunk));
+
+export type RootState = ReturnType<typeof reducers>;

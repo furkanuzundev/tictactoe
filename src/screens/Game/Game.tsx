@@ -7,6 +7,7 @@ import Indicator from '../../components/Indicator';
 import Player from './Player';
 
 import Board from './Board';
+import {RootState} from '../../store';
 
 interface GameProps {
   route: any;
@@ -15,7 +16,7 @@ interface GameProps {
 const Game = (props: GameProps) => {
   const dispatch = useDispatch();
 
-  const {game, user} = useSelector(store => store);
+  const {game, user} = useSelector((store: RootState) => store);
 
   useEffect(() => {
     dispatch(listenCurrentGame(props.route.params.item));
@@ -24,7 +25,6 @@ const Game = (props: GameProps) => {
   if (!game.currentGame) {
     return <Indicator loading={false} />;
   }
-
 
   const me = game.currentGame
     .data()
