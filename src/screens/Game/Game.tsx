@@ -16,7 +16,6 @@ const Game = (props: GameProps) => {
   const dispatch = useDispatch();
 
   const {game, user} = useSelector(store => store);
-  let turn = game.currentGame.data().turn.uid === user.currentUser.uid;
 
   useEffect(() => {
     dispatch(listenCurrentGame(props.route.params.item));
@@ -25,6 +24,7 @@ const Game = (props: GameProps) => {
   if (!game.currentGame) {
     return <Indicator loading={false} />;
   }
+
 
   const me = game.currentGame
     .data()
@@ -43,13 +43,13 @@ const Game = (props: GameProps) => {
       <Player
         player={away}
         style={{borderBottomLeftRadius: 10, borderBottomRightRadius: 10}}
-        turn={game.currentGame.data().turn.uid === away.uid}
+        turn={away && game.currentGame.data().turn.uid === away.uid}
       />
       <Board />
       <Player
         player={me}
         style={{borderTopLeftRadius: 10, borderTopRightRadius: 10}}
-        turn={game.currentGame.data().turn.uid === me.uid}
+        turn={me && game.currentGame.data().turn.uid === me.uid}
       />
     </View>
   );
