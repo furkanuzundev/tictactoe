@@ -36,6 +36,7 @@ const CreateGame = () => {
   const [selectBoardModal, setSelectBoardModal] = useState<boolean>(false);
 
   const onCreate = () => {
+    //TODO: handle empty game name
     const data = {
       backgroundColor: boardBackgroundColor,
       between: [
@@ -72,13 +73,11 @@ const CreateGame = () => {
             />
           </View>
           <View style={[styles.card, {marginTop: 10}]}>
-            <Input
-              style={styles.input}
-              placeholder="Select Board"
-              editable={false}
-              value={grid.dimension}
-              onPressIn={() => setSelectBoardModal(true)}
-            />
+            <TouchableOpacity
+              onPress={() => setSelectBoardModal(true)}
+              style={styles.selectBoard}>
+              <Text style={styles.selectBoardText}>{grid.dimension}</Text>
+            </TouchableOpacity>
           </View>
           <View style={[styles.card, {marginTop: 10}]}>
             <Input
@@ -167,6 +166,20 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexGrow: 0,
     height: 80,
+  },
+  selectBoard: {
+    ...theme.shadow,
+    color: colors.black,
+    backgroundColor: colors.white,
+    borderRadius: 10,
+    height: 50,
+    padding: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  selectBoardText: {
+    fontFamily: theme.font.family,
+    fontSize: theme.font.sizes.medium,
   },
   scrollViewContenContainer: {
     alignItems: 'center',
