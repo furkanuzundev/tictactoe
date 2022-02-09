@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import {AuthStack, MainStack} from './Stacks';
+import Splash from '../screens/Splash';
 
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import colors from '../constants/colors';
@@ -19,6 +20,7 @@ const Root = (props: RootProps) => {
       <SafeAreaView style={styles.container}>
         <NavigationContainer>
           <RootStack.Navigator screenOptions={{headerShown: false}}>
+            <RootStack.Screen name="Splash" component={Splash} />
             <RootStack.Screen name="Auth" component={AuthStack} />
             <RootStack.Screen name="Main" component={MainStack} />
           </RootStack.Navigator>

@@ -33,7 +33,6 @@ const Login = () => {
   const [username, setUsername] = useState<string>('');
 
   const onLogin = () => {
-    // TODO: Add splash screen
     if (username) {
       auth()
         .signInAnonymously()
@@ -53,7 +52,7 @@ const Login = () => {
             }),
           );
         })
-        .catch(err => console.error('err : ', err));
+        .catch(err => console.error('auth error! : ', err));
     }
   };
 
