@@ -42,6 +42,8 @@ const GameList = (props: GameListProps) => {
     const joinedUser = {...user.currentUser, mark: 'O'};
     selectedGame.between = [...selectedGame.between, joinedUser];
 
+    selectedGame.status = 1;
+
     item.ref.update(selectedGame);
     navigation.navigate('Game', {item});
   };
@@ -51,6 +53,7 @@ const GameList = (props: GameListProps) => {
   }
 
   return (
+    //TODO: list game LIFO
     <View style={styles.container}>
       <Header onBackPress={() => navigation.goBack()} />
       <FlatList
