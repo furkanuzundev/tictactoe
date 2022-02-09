@@ -12,7 +12,7 @@ const SelectAction = (props: SelectActionProps) => {
   return (
     <View style={styles.container}>
       <Button
-        title="Create a game"
+        title="Create game"
         onPress={() => navigation.navigate('CreateGame')}
         buttonStyle={styles.button}
         textStyle={styles.text}

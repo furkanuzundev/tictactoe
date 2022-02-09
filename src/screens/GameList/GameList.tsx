@@ -7,6 +7,7 @@ import Indicator from '../../components/Indicator';
 import colors from '../../constants/colors';
 import theme from '../../constants/theme';
 import {useNavigation} from '@react-navigation/native';
+import Header from './Header';
 
 interface GameListProps {}
 
@@ -48,18 +49,15 @@ const GameList = (props: GameListProps) => {
     return <Indicator loading={true} />;
   }
 
-  //TODO: add back button into header
-
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Games</Text>
-      </View>
+      <Header onBackPress={() => navigation.goBack()} />
       <FlatList
         data={game.games}
         renderItem={_renderGames}
         keyExtractor={_keyExtractor}
         contentContainerStyle={styles.flatlist}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
@@ -68,19 +66,9 @@ const GameList = (props: GameListProps) => {
 export default GameList;
 
 const styles = StyleSheet.create({
-  header: {
-    padding: 10,
-    backgroundColor: colors.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerText: {
-    fontFamily: theme.font.family,
-    fontSize: theme.font.sizes.large,
-    color: colors.primary,
-  },
   container: {
     flex: 1,
+    backgroundColor: colors.background,
   },
   flatlist: {
     padding: 10,
@@ -90,6 +78,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     ...theme.shadow,
+    marginVertical: 5,
   },
   title: {
     fontFamily: theme.font.family,
