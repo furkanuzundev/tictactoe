@@ -6,6 +6,8 @@ import colors from '../../constants/colors';
 import {SCREEN_WIDTH} from '../../constants/screen';
 import theme from '../../constants/theme';
 
+import {checkWinner} from '../../utils/winnerHandler';
+
 interface BoardProps {}
 
 const Board = (props: BoardProps) => {
@@ -19,7 +21,7 @@ const Board = (props: BoardProps) => {
 
     return Object.values(board).map((columnItem, columnIndex) => {
       return (
-        <View style={styles.row}>
+        <View style={styles.row} key={columnIndex}>
           {renderRows(columnItem, columnIndex, length)}
         </View>
       );
@@ -30,7 +32,9 @@ const Board = (props: BoardProps) => {
     const boxDimension = SCREEN_WIDTH / length;
     return columnItem.map((rowItem: any, rowIndex: number) => {
       return (
-        <TouchableOpacity onPress={() => move(columnIndex, rowIndex)} a>
+        <TouchableOpacity
+          onPress={() => move(columnIndex, rowIndex)}
+          key={rowIndex}>
           <View
             style={[
               {
@@ -57,22 +61,27 @@ const Board = (props: BoardProps) => {
 
     updatedGame.board[columnIndex][rowIndex] = me.mark;
 
+    checkWinner(updatedGame.board, {x: columnIndex, y: rowIndex}, me.mark);
+
     const away = updatedGame.between.find(
       (item: any) => item.uid !== user.currentUser.uid,
     );
 
-    if (turn) {
+    /*  if (turn) {
       turn = false;
       updatedGame.turn = away;
     } else {
       updatedGame.turn = me;
-    }
+    } */
 
     game.currentGame.ref.update(updatedGame);
   };
 
   return (
-    <View style={styles.container} pointerEvents={turn ? 'auto' : 'none'}>
+    <View
+      style={styles.container}
+      //pointerEvents={turn ? 'auto' : 'none'}
+    >
       {renderColumns()}
     </View>
   );
