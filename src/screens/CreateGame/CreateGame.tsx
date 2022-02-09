@@ -18,6 +18,9 @@ import board from '../../constants/board';
 import firestore from '@react-native-firebase/firestore';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import Input from '../../components/Input';
+
+import SelectBoard from './SelectBoard';
 
 interface componentNameProps {}
 
@@ -25,9 +28,12 @@ const CreateGame = () => {
   const navigation = useNavigation();
   const {currentUser} = useSelector(store => store.user);
 
-  const [gameName, setGameName] = useState<string>('test');
+  const [gameName, setGameName] = useState<string>('');
   const [boardBackgroundColor, setBoardbackgroundColor] =
-    useState<string>('#FFE162');
+    useState<string>('#d11cd5');
+  const [grid, setGrid] = useState(board.grids[0]);
+
+  const [selectBoardModal, setSelectBoardModal] = useState<boolean>(false);
 
   const onCreate = () => {
     const data = {
@@ -38,10 +44,11 @@ const CreateGame = () => {
           mark: 'X',
         },
       ],
-      board: board.grids[0].data,
-      dimension: board.grids[0].dimension,
+      board: grid.data,
+      dimension: grid.dimension,
       createdAt: new Date(),
       gameName,
+      turn: {...currentUser},
     };
 
     firestore()
@@ -55,37 +62,66 @@ const CreateGame = () => {
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.keyboard}>
       <View style={styles.container}>
-        <View style={styles.middle}>
-          <TextInput
-            style={styles.input}
-            placeholder="Game Name"
-            onChangeText={value => setGameName(value)}
-            value={gameName}
-            selectionColor={colors.primary}
-          />
-          <TextInput
-            style={[styles.input, {backgroundColor: boardBackgroundColor}]}
-            placeholder="Board color"
-            editable={false}
-            placeholderTextColor={colors.white}
-          />
-          <ScrollView
-            horizontal
-            style={styles.scrollView}
-            showsHorizontalScrollIndicator={false}>
-            {board.colorpalette.map((color, index) => (
-              <TouchableOpacity
-                onPress={() => setBoardbackgroundColor(color)}
-                key={index}>
-                <View style={[{backgroundColor: color}, styles.circle]} />
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+        <View>
+          <View style={styles.card}>
+            <Input
+              style={styles.input}
+              placeholder="Game Name"
+              onChangeText={value => setGameName(value)}
+              value={gameName}
+            />
+          </View>
+          <View style={[styles.card, {marginTop: 10}]}>
+            <Input
+              style={styles.input}
+              placeholder="Select Board"
+              editable={false}
+              value={grid.dimension}
+              onPressIn={() => setSelectBoardModal(true)}
+            />
+          </View>
+          <View style={[styles.card, {marginTop: 10}]}>
+            <Input
+              style={[styles.input, {backgroundColor: boardBackgroundColor}]}
+              placeholder="Background Color"
+              editable={false}
+              placeholderTextColor={colors.white}
+            />
+            <ScrollView
+              horizontal
+              style={styles.scrollView}
+              contentContainerStyle={styles.scrollViewContenContainer}
+              showsHorizontalScrollIndicator={false}>
+              {board.colorpalette.map((color, index) => {
+                const selected = color === boardBackgroundColor;
+                return (
+                  <TouchableOpacity
+                    onPress={() => setBoardbackgroundColor(color)}
+                    key={index}>
+                    <View
+                      style={[
+                        {backgroundColor: color},
+                        selected && {transform: [{scale: 1.5}]},
+                        styles.circle,
+                      ]}
+                    />
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
         </View>
         <TouchableOpacity style={styles.button} onPress={onCreate}>
           <Text style={styles.buttonText}>CREATE GAME</Text>
         </TouchableOpacity>
       </View>
+      <SelectBoard
+        isOpen={selectBoardModal}
+        onClosed={() => setSelectBoardModal(false)}
+        close={() => setSelectBoardModal(false)}
+        selectGrid={(item: any) => setGrid(item)}
+        selectedGrid={grid}
+      />
     </KeyboardAwareScrollView>
   );
 };
@@ -125,36 +161,30 @@ const styles = StyleSheet.create({
     color: colors.yellow,
   },
   input: {
-    backgroundColor: colors.white,
-    marginTop: 10,
-    borderRadius: 10,
-    width: 200,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontFamily: fonts.indie,
     textAlign: 'center',
-    fontSize: 25,
-    color: colors.black,
-    ...theme.shadow,
   },
   scrollView: {
     marginTop: 20,
     flexGrow: 0,
-    height: 70,
+    height: 80,
+  },
+  scrollViewContenContainer: {
+    alignItems: 'center',
   },
   circle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     ...theme.shadow,
     borderWidth: 0.5,
     borderColor: colors.white,
-    marginLeft: 10,
+    marginLeft: 15,
   },
   middle: {
-    justifyContent: 'center',
-    alignItems: 'center',
     paddingHorizontal: 10,
+  },
+  card: {
+    padding: 10,
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
 });

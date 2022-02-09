@@ -1,4 +1,69 @@
-import {firebase} from '@react-native-firebase/auth';
+import React, {useEffect} from 'react';
+import {Text, View, StyleSheet} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {listenCurrentGame} from '../../store/game/operations';
+import Indicator from '../../components/Indicator';
+import Player from './Player';
+
+import Board from './Board';
+
+interface GameProps {
+  route: any;
+}
+
+const Game = (props: GameProps) => {
+  const dispatch = useDispatch();
+
+  const {game, user} = useSelector(store => store);
+  let turn = game.currentGame.data().turn.uid === user.currentUser.uid;
+
+  useEffect(() => {
+    dispatch(listenCurrentGame(props.route.params.item));
+  }, [dispatch, props.route]);
+
+  if (!game.currentGame) {
+    return <Indicator loading={false} />;
+  }
+
+  const me = game.currentGame
+    .data()
+    .between.find((item: any) => item.uid === user.currentUser.uid);
+
+  const away = game.currentGame
+    .data()
+    .between.find((item: any) => item.uid !== user.currentUser.uid);
+
+  return (
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: game.currentGame.data().backgroundColor},
+      ]}>
+      <Player
+        player={away}
+        style={{borderBottomLeftRadius: 10, borderBottomRightRadius: 10}}
+        turn={game.currentGame.data().turn.uid === away.uid}
+      />
+      <Board />
+      <Player
+        player={me}
+        style={{borderTopLeftRadius: 10, borderTopRightRadius: 10}}
+        turn={game.currentGame.data().turn.uid === me.uid}
+      />
+    </View>
+  );
+};
+
+export default Game;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+
+/* import {firebase} from '@react-native-firebase/auth';
 import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 
@@ -126,4 +191,4 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-});
+}); */

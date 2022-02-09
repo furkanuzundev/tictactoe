@@ -47,10 +47,13 @@ const GameList = (props: GameListProps) => {
   if (!game.games) {
     return <Indicator loading={true} />;
   }
+
+  //TODO: add back button into header
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text>Games</Text>
+        <Text style={styles.headerText}>Games</Text>
       </View>
       <FlatList
         data={game.games}
@@ -68,6 +71,13 @@ const styles = StyleSheet.create({
   header: {
     padding: 10,
     backgroundColor: colors.background,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerText: {
+    fontFamily: theme.font.family,
+    fontSize: theme.font.sizes.large,
+    color: colors.primary,
   },
   container: {
     flex: 1,

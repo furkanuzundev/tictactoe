@@ -2,6 +2,7 @@ import * as types from './types';
 
 const initialState = {
   games: null,
+  currentGame: null,
 };
 
 export default function (state = initialState, action) {
@@ -12,6 +13,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         games: payload,
+      };
+    case types.LISTEN_CURRENT_GAME:
+      return {
+        ...state,
+        currentGame: payload,
       };
     default:
       return state;
