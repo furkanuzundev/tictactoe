@@ -1,24 +1,40 @@
 export const checkWinner = (board, point, mark) => {
-  //checkHorizontal(board, point, mark);
-  //console.log('checkDiagonal : ', checkDiagonal(board, point, mark));
-  console.log(
-    'checkReverseDiagonal : ',
-    checkReverseDiagonal(board, point, mark),
-  );
+  /* return (
+    checkHorizontal(board, point, mark) ||
+    checkVertical(board, point, mark) ||
+    checkDiagonal(board, point, mark) ||
+    checkReverseDiagonal(board, point, mark)
+  ); */
 
-  //console.log('checkVertical : ', checkVertical(board, point, mark));
+  let horizontal = checkHorizontal(board, point, mark);
+  if (horizontal) {
+    return horizontal;
+  }
+
+  let vertical = checkVertical(board, point, mark);
+  if (vertical) {
+    return vertical;
+  }
+
+  let diagonal = checkDiagonal(board, point, mark);
+  if (diagonal) {
+    return diagonal;
+  }
+
+  let reverseDianogal = checkReverseDiagonal(board, point, mark);
+  if (reverseDianogal) {
+    return reverseDianogal;
+  }
 };
 
 const checkHorizontal = (board, point, mark) => {
-  //board, point, mark
-
-  let array = [];
-  Object.values(board[point.x]).forEach(item => {
+  let array: Array = [];
+  Object.values(board[point.x]).forEach((item, index) => {
     if (array.length === 3) {
       return;
     }
     if (item === mark) {
-      array.push(item);
+      array.push({x: point.x, y: index});
     }
 
     if (item !== mark && array.length < 3) {
@@ -26,18 +42,18 @@ const checkHorizontal = (board, point, mark) => {
     }
   });
 
-  return array.length === 3;
+  return array.length === 3 && array;
 };
 
 const checkVertical = (board, point, mark) => {
-  let array = [];
+  let array: Array = [];
 
   Object.keys(board).forEach(row => {
     if (array.length === 3) {
       return;
     }
     if (board[row][point.y] === mark) {
-      array.push(board[row][point.y]);
+      array.push({x: row, y: point.y});
     }
 
     if (board[row][point.y] !== mark && array.length < 3) {
@@ -45,7 +61,7 @@ const checkVertical = (board, point, mark) => {
     }
   });
 
-  return array.length === 3;
+  return array.length === 3 && array;
 };
 
 const checkDiagonal = (board, point, mark) => {
@@ -60,14 +76,14 @@ const checkDiagonal = (board, point, mark) => {
         break;
       }
       if (board[row][column] === mark) {
-        array.push(board[row][column]);
+        array.push({x: row, y: column});
       }
 
       if (board[row][column] !== mark && array.length < 3) {
         array = [];
       }
     }
-    return array.length === 3;
+    return array.length === 3 && array;
   } else {
     let array = [];
 
@@ -80,14 +96,14 @@ const checkDiagonal = (board, point, mark) => {
         break;
       }
       if (board[row][column] === mark) {
-        array.push(board[row][column]);
+        array.push({x: row, y: column});
       }
 
       if (board[row][column] !== mark && array.length < 3) {
         array = [];
       }
     }
-    return array.length === 3;
+    return array.length === 3 && array;
   }
 };
 
@@ -99,16 +115,14 @@ const checkReverseDiagonal = (board, point, mark) => {
   const startColumn = sum > length ? length : sum;
   const limit = sum > length ? length : sum;
 
-  console.log('sum : ', sum);
   let array = [];
 
   for (let row = startRow, column = startColumn; row < limit; row++, column--) {
-    console.log('row: ', row, 'column :', column);
     if (array.length === 3) {
       break;
     }
     if (board[row][column] === mark) {
-      array.push(board[row][column]);
+      array.push({x: row, y: column});
     }
 
     if (board[row][column] !== mark && array.length < 3) {
@@ -116,5 +130,5 @@ const checkReverseDiagonal = (board, point, mark) => {
     }
   }
 
-  return array.length === 3;
+  return array.length === 3 && array;
 };
