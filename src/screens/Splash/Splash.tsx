@@ -24,7 +24,7 @@ const Splash = (props: SplashProps) => {
     const currentUser = await AsyncStorage.getItem('@user');
 
     if (currentUser) {
-      dispatch(setUser(currentUser));
+      dispatch(setUser(JSON.parse(currentUser)));
       resetNavigation('Main');
     } else {
       resetNavigation('Login');
