@@ -26,9 +26,31 @@ const GameList = (props: GameListProps) => {
     const data = item.data();
     return (
       <TouchableOpacity onPress={() => joinGame(item)}>
-        <View style={styles.card}>
-          <Text style={styles.title}>{data.gameName}</Text>
-          <Text style={styles.grid}>{data.dimension}</Text>
+        <View style={styles.cardContainer}>
+          <View style={styles.gameInformation}>
+            <Text style={styles.title}>{data.gameName}</Text>
+            <Text style={styles.grid}>{data.dimension}</Text>
+            <View style={styles.betweenContainer}>
+              {data.between[0] && (
+                <Text style={styles.user}>{data.between[0].username}</Text>
+              )}
+              <Text style={styles.user}> vs </Text>
+              {data.between[1] && (
+                <Text style={styles.user}>{data.between[1].username}</Text>
+              )}
+            </View>
+          </View>
+          <View style={styles.statusContainer}>
+            <View
+              style={[
+                styles.circle,
+                {backgroundColor: colors.statusPalette[data.status].color},
+              ]}
+            />
+            <Text style={styles.statusText}>
+              {colors.statusPalette[data.status].text}
+            </Text>
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -38,6 +60,10 @@ const GameList = (props: GameListProps) => {
 
   const joinGame = (item: any) => {
     let selectedGame = {...item.data()};
+
+    if (selectedGame.status === 2 || selectedGame.status === 3) {
+      return;
+    }
 
     const joinedUser = {...user.currentUser, mark: 'O'};
     selectedGame.between = [...selectedGame.between, joinedUser];
@@ -57,7 +83,9 @@ const GameList = (props: GameListProps) => {
     <View style={styles.container}>
       <Header onBackPress={() => navigation.goBack()} />
       <FlatList
-        data={game.games}
+        data={game.games.sort(
+          (a: any, b: any) => a.data().status - b.data().status,
+        )}
         renderItem={_renderGames}
         keyExtractor={_keyExtractor}
         contentContainerStyle={styles.flatlist}
@@ -77,12 +105,17 @@ const styles = StyleSheet.create({
   flatlist: {
     padding: 10,
   },
-  card: {
+  cardContainer: {
     backgroundColor: colors.white,
     padding: 10,
     borderRadius: 10,
     ...theme.shadow,
     marginVertical: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  gameInformation: {
+    flex: 1,
   },
   title: {
     fontFamily: theme.font.family,
@@ -92,76 +125,25 @@ const styles = StyleSheet.create({
     fontFamily: theme.font.family,
     fontSize: theme.font.sizes.small,
   },
-});
-
-/* import * as React from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
-import colors from '../../constants/colors';
-import {useNavigation} from '@react-navigation/native';
-
-import firestore from '@react-native-firebase/firestore';
-import {useEffect} from 'react';
-import {useState} from 'react';
-import {useSelector} from 'react-redux';
-
-interface GameListProps {}
-
-const GameList = () => {
-  const {currentUser} = useSelector(store => store.user);
-
-  const navigation = useNavigation();
-  const [gameList, setGameList] = useState();
-
-  useEffect(() => {
-    firestore().collection('games').onSnapshot(onResult);
-  }, []);
-
-  const onResult = (snapshot: any) => {
-    setGameList(snapshot.docs);
-  };
-
-  const _renderItem = ({item}) => {
-    const data = item.data();
-
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          item.ref
-            .update({
-              ...data,
-              between: [
-                ...data.between,
-                {
-                  ...currentUser,
-                  mark: 'O',
-                },
-              ],
-            })
-            .then(() => navigation.navigate('Game', {item}));
-        }}>
-        <Text>{data.gameName}</Text>
-      </TouchableOpacity>
-    );
-  };
-
-  console.log('gameList: ', gameList);
-
-  return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate('CreateGame')}>
-        <Text>create a game</Text>
-      </TouchableOpacity>
-
-      <FlatList data={gameList} renderItem={_renderItem} />
-    </View>
-  );
-};
-
-export default GameList;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
+  statusContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-}); */
+  circle: {
+    width: 10,
+    height: 10,
+    borderRadius: 10,
+  },
+  statusText: {
+    fontSize: theme.font.sizes.extraSmall,
+    fontFamily: theme.font.family,
+    marginLeft: 5,
+  },
+  betweenContainer: {
+    flexDirection: 'row',
+  },
+  user: {
+    fontFamily: theme.font.family,
+    fontSize: theme.font.sizes.small,
+  },
+});
