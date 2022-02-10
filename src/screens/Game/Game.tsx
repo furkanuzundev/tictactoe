@@ -22,7 +22,7 @@ const Game = (props: GameProps) => {
     dispatch(listenCurrentGame(props.route.params.item));
   }, [dispatch, props.route]);
 
-  if (!game.currentGame) {
+  if (!game.currentGame || !game.currentGame.data()) {
     return <Indicator loading={false} />;
   }
 
