@@ -15,6 +15,7 @@ export default {
   font: {
     family: Platform.OS === 'ios' ? 'IndieFlower' : 'IndieFlower-Regular',
     sizes: {
+      extraSmall: 14,
       small: 18,
       medium: 25,
       large: 35,
