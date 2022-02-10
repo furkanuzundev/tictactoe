@@ -65,6 +65,7 @@ const CreateGame = () => {
        *  2: Game is done!
        */
       status: 0,
+      steps: 0,
     };
 
     firestore()
