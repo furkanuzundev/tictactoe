@@ -40,16 +40,23 @@ const GameList = (props: GameListProps) => {
               )}
             </View>
           </View>
-          <View style={styles.statusContainer}>
-            <View
-              style={[
-                styles.circle,
-                {backgroundColor: colors.statusPalette[data.status].color},
-              ]}
-            />
-            <Text style={styles.statusText}>
-              {colors.statusPalette[data.status].text}
-            </Text>
+          <View>
+            <View style={styles.statusContainer}>
+              <View
+                style={[
+                  styles.circle,
+                  {backgroundColor: colors.statusPalette[data.status].color},
+                ]}
+              />
+              <Text style={styles.statusText}>
+                {colors.statusPalette[data.status].text}
+              </Text>
+            </View>
+            {data.winner && (
+              <Text style={styles.wonUser}>
+                🎉 {data.winner.user.username} won
+              </Text>
+            )}
           </View>
         </View>
       </TouchableOpacity>
@@ -61,7 +68,7 @@ const GameList = (props: GameListProps) => {
   const joinGame = (item: any) => {
     let selectedGame = {...item.data()};
 
-    if (selectedGame.status === 2 || selectedGame.status === 3) {
+    if (selectedGame.status === 1 || selectedGame.status === 2) {
       return;
     }
 
@@ -145,5 +152,9 @@ const styles = StyleSheet.create({
   user: {
     fontFamily: theme.font.family,
     fontSize: theme.font.sizes.small,
+  },
+  wonUser: {
+    fontFamily: theme.font.family,
+    fontSize: theme.font.sizes.extraSmall,
   },
 });
