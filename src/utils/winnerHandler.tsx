@@ -108,7 +108,7 @@ const checkDiagonal = (board, point, mark) => {
 };
 
 const checkReverseDiagonal = (board, point, mark) => {
-  const length = Object.keys(board).length;
+  const length = Object.keys(board).length - 1;
   const sum = point.x + point.y;
 
   const startRow = sum > length ? sum - length : 0;
@@ -117,7 +117,11 @@ const checkReverseDiagonal = (board, point, mark) => {
 
   let array = [];
 
-  for (let row = startRow, column = startColumn; row < limit; row++, column--) {
+  for (
+    let row = startRow, column = startColumn;
+    row <= limit;
+    row++, column--
+  ) {
     if (array.length === 3) {
       break;
     }
