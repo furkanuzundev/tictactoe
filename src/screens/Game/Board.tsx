@@ -2,7 +2,7 @@ import {CommonActions, useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {useEffect} from 'react';
 import {useState} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import board from '../../constants/board';
 
@@ -50,6 +50,21 @@ const Board = (props: BoardProps) => {
     });
   };
 
+  useEffect(() => {
+    const currentGame = game.currentGame.data();
+    const boardLength = Math.pow(Object.keys(currentGame.board).length, 2);
+
+    if (currentGame.steps === 0) {
+      return;
+    }
+
+    if (currentGame.winner) {
+      showWinner(currentGame);
+    } else if (boardLength === currentGame.steps) {
+      showDraw();
+    }
+  }, [game.currentGame.data().steps]);
+
   const renderColumns = (rowItem: any, rowIndex: number, length: number) => {
     const boxDimension = SCREEN_WIDTH / length;
     return rowItem.map((columnItem: any, columnIndex: number) => {
@@ -73,21 +88,6 @@ const Board = (props: BoardProps) => {
       );
     });
   };
-
-  useEffect(() => {
-    const currentGame = game.currentGame.data();
-    const boardLength = Math.pow(Object.keys(currentGame.board).length, 2);
-
-    if (currentGame.steps === 0) {
-      return;
-    }
-
-    if (currentGame.winner) {
-      showWinner(currentGame);
-    } else if (boardLength === currentGame.steps) {
-      showDraw();
-    }
-  }, [game.currentGame]);
 
   const move = (rowIndex: number, columnIndex: number) => {
     const updatedGame = {...game.currentGame.data()};
@@ -116,7 +116,7 @@ const Board = (props: BoardProps) => {
         moves: winner,
         user: myTurn ? me : away,
       };
-      updatedGame.status = 3;
+      updatedGame.status = 2;
     } else if (boardLength === updatedGame.steps) {
       const resetBoard = board.grids.find(
         item => item.dimension === updatedGame.dimension,
@@ -124,7 +124,6 @@ const Board = (props: BoardProps) => {
 
       updatedGame.board = resetBoard.data;
       updatedGame.turn = updatedGame.between[0];
-      console.log('updatedGame DRAW :', updatedGame);
     } else {
       updatedGame.turn = myTurn ? away : me;
     }
