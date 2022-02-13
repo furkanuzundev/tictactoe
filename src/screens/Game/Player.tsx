@@ -21,7 +21,7 @@ const Player = (props: PlayerProps) => {
           {player.username} - {player.mark}
         </Text>
       ) : (
-        <Text style={styles.userText}>Waiting for somebody...</Text>
+        <Text style={styles.userText}>Waiting for rival...</Text>
       )}
     </View>
   );

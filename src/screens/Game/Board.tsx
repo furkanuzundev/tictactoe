@@ -194,8 +194,6 @@ const Board = (props: BoardProps) => {
 
 export default Board;
 
-// pointerEvents={allowTouch ? 'auto' : 'none'}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

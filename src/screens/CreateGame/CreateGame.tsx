@@ -8,7 +8,6 @@ import {
   ScrollView,
 } from 'react-native';
 
-//TODO: move files to jsonconfig
 import colors from '../../constants/colors';
 import theme from '../../constants/theme';
 import fonts from '../../constants/fonts';

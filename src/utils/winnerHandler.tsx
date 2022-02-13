@@ -1,11 +1,4 @@
 export const checkWinner = (board, point, mark) => {
-  /* return (
-    checkHorizontal(board, point, mark) ||
-    checkVertical(board, point, mark) ||
-    checkDiagonal(board, point, mark) ||
-    checkReverseDiagonal(board, point, mark)
-  ); */
-
   let horizontal = checkHorizontal(board, point, mark);
   if (horizontal) {
     return horizontal;

@@ -86,7 +86,6 @@ const GameList = (props: GameListProps) => {
   }
 
   return (
-    //TODO: list game LIFO
     <View style={styles.container}>
       <Header onBackPress={() => navigation.goBack()} />
       <FlatList
