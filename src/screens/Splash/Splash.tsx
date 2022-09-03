@@ -27,7 +27,7 @@ const Splash = (props: SplashProps) => {
       dispatch(setUser(JSON.parse(currentUser)));
       resetNavigation('Main');
     } else {
-      resetNavigation('Login');
+      resetNavigation('Auth');
     }
   };
 

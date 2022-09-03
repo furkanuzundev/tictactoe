@@ -31,11 +31,11 @@ const GameList = (props: GameListProps) => {
             <Text style={styles.title}>{data.gameName}</Text>
             <Text style={styles.grid}>{data.dimension}</Text>
             <View style={styles.betweenContainer}>
-              {data.between[0] && (
+              {data.between && data.between.length > 0 && data.between[0] && (
                 <Text style={styles.user}>{data.between[0].username}</Text>
               )}
               <Text style={styles.user}> vs </Text>
-              {data.between[1] && (
+              {data.between && data.between.length > 0 && data?.between[1] && (
                 <Text style={styles.user}>{data.between[1].username}</Text>
               )}
             </View>
@@ -45,11 +45,14 @@ const GameList = (props: GameListProps) => {
               <View
                 style={[
                   styles.circle,
-                  {backgroundColor: colors.statusPalette[data.status].color},
+                  {
+                    backgroundColor:
+                      data.status && colors.statusPalette[data.status].color,
+                  },
                 ]}
               />
               <Text style={styles.statusText}>
-                {colors.statusPalette[data.status].text}
+                {data.status && colors.statusPalette[data.status].text}
               </Text>
             </View>
             {data.winner && (
